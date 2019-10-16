@@ -1,3 +1,5 @@
+# Reference to the Pytorch tutorial of transfer learning: 
+# https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html
 from __future__ import print_function, division
 
 import torch
