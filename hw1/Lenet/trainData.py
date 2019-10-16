@@ -1,3 +1,4 @@
+#Use Lenet structure, but change the filter numbers for convolution layers.
 import os
 import sys
 import numpy as np
@@ -74,7 +75,4 @@ def trainData():
     
 if __name__ == '__main__':
     trainData()
-
-   
-
-  
+    
