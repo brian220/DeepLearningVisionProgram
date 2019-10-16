@@ -11,7 +11,6 @@ from torchvision import transforms
 import matplotlib.pyplot as plt
 import csv
 from PIL import Image
-from trainData import Net, TRANSFORM_IMG, BATCH_SIZE
 
 torch.manual_seed(1) 
 TEST_DATA_PATH = "D:/user/Desktop/cs-ioc5008-hw1/dataset/dataset/test/test"
@@ -22,7 +21,7 @@ TRANSFORM_TEST = transforms.Compose([
     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ])
 
-class testDataset(Dataset):
+class TestDataset(Dataset):
 
     def __init__(self, root_dir, transform=None):
         self.root_dir = root_dir
@@ -34,7 +33,6 @@ class testDataset(Dataset):
     def __getitem__(self, idx):
         if torch.is_tensor(idx):
            idx = idx.tolist()
-        #print(idx)
         img_name = os.listdir(self.root_dir)[idx]
         img_dir = os.path.join(self.root_dir, img_name)
         image = Image.open(img_dir).convert('RGB')
@@ -44,10 +42,8 @@ class testDataset(Dataset):
         sample = (image, img_name)
         return sample
 
-
-
-test_data = testDataset(root_dir=TEST_DATA_PATH, transform=TRANSFORM_TEST)
-test_data_loader = torch.utils.data.DataLoader(test_data, batch_size = 4,shuffle = False,num_workers = 4)
+test_data = TestDataset(root_dir=TEST_DATA_PATH, transform=TRANSFORM_TEST)
+test_data_loader = torch.utils.data.DataLoader(test_data, batch_size=4,shuffle=False,num_workers=4)
 
 classes = ('bedroom', 'coast', 'forest', 'highway','insidecity', 
            'kitchen', 'livingroom', 'mountain', 'office','opencountry',
