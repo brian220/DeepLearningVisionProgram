@@ -27,7 +27,6 @@ TRANSFORM_IMG = transforms.Compose([
     ])
 
 class testDataset(Dataset):
-
     def __init__(self, root_dir, transform=None):
         self.root_dir = root_dir
         self.transform = transform
@@ -52,8 +51,7 @@ class testDataset(Dataset):
 train_data = torchvision.datasets.ImageFolder(root=TRAIN_DATA_PATH, transform=TRANSFORM_IMG)
 train_data_loader = data.DataLoader(train_data, batch_size=BATCH_SIZE, shuffle=True,  num_workers=4)
 test_data = testDataset(root_dir=TEST_DATA_PATH, transform=TRANSFORM_IMG)
-#test_data = torchvision.datasets.ImageFolder(root=TEST_DATA_PATH, transform=TRANSFORM_IMG)
-test_data_loader = torch.utils.data.DataLoader(test_data, batch_size = BATCH_SIZE,shuffle = False,num_workers = 4)
+test_data_loader = torch.utils.data.DataLoader(test_data, batch_size=BATCH_SIZE, shuffle=False, num_workers=4)
 
 classes = ('bedroom', 'coast', 'forest', 'highway','insidecity', 
            'kitchen', 'livingroom', 'mountain', 'office','opencountry',
