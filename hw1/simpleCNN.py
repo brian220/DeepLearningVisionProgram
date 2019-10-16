@@ -19,15 +19,15 @@ TRAIN_DATA_PATH = "D:/user/Desktop/cs-ioc5008-hw1/dataset/dataset/train"
 TEST_DATA_PATH = "D:/user/Desktop/cs-ioc5008-hw1/dataset/dataset/test/test"
 CROPSIZE = 128
 
-TRANSFORM_IMG = transforms.Compose([
+transform_img = transforms.Compose([
     transforms.RandomResizedCrop(CROPSIZE),
     transforms.ToTensor(),
     transforms.Normalize(mean=[0.5, 0.5, 0.5],
                          std=[0.5, 0.5, 0.5] )
     ])
 
-class testDataset(Dataset):
 
+class TestDataset(Dataset):
     def __init__(self, root_dir, transform=None):
         self.root_dir = root_dir
         self.transform = transform
@@ -45,16 +45,16 @@ class testDataset(Dataset):
         
         if self.transform:
             image = self.transform(image)
+            
         sample = (image, img_name)
+        
         return sample
 
 
-train_data = torchvision.datasets.ImageFolder(root=TRAIN_DATA_PATH, transform=TRANSFORM_IMG)
-train_data_loader = data.DataLoader(train_data, batch_size=BATCH_SIZE, shuffle=True,  num_workers=4)
-test_data = testDataset(root_dir=TEST_DATA_PATH, transform=TRANSFORM_IMG)
-#test_data = torchvision.datasets.ImageFolder(root=TEST_DATA_PATH, transform=TRANSFORM_IMG)
-test_data_loader = torch.utils.data.DataLoader(test_data, batch_size = BATCH_SIZE,shuffle = False,num_workers = 4)
-#print(test_data[0])
+train_data = torchvision.datasets.ImageFolder(root=TRAIN_DATA_PATH, transform=transform_img)
+train_data_loader = data.DataLoader(train_data, batch_size=BATCH_SIZE, shuffle=True, num_workers=4)
+test_data = TestDataset(root_dir=TEST_DATA_PATH, transform=transform_img)
+test_data_loader = torch.utils.data.DataLoader(test_data, batch_size=BATCH_SIZE, shuffle=False, num_workers=4)
 
 classes = ('bedroom', 'coast', 'forest', 'highway','insidecity', 
            'kitchen', 'livingroom', 'mountain', 'office','opencountry',
@@ -70,7 +70,7 @@ class CNN(torch.nn.Module):
                 out_channels=32, # filter numbers
                 kernel_size=5, # filter size
                 stride=1,
-                padding=2 #padding = (kernal_size-1)/2= (5 - 1)/2
+                padding=2 # padding = (kernal_size-1)/2= (5 - 1)/2
             ), 
             nn.ReLU(), 
             nn.MaxPool2d(kernel_size=2),
@@ -80,14 +80,16 @@ class CNN(torch.nn.Module):
             nn.ReLU(),
             nn.MaxPool2d(2) 
         )
-        self.out = torch.nn.Linear(16 * 32 * 32, 13)   # hidden layer
+        self.out = torch.nn.Linear(16 * 32 * 32, 13) # hidden layer
     
     def forward(self, x):
         x = self.conv1(x)
         x = self.conv2(x)      
         x = x.view(x.size(0), -1)
         output = self.out(x)
+        
         return output
+
 
 cnn = CNN()
 cnn.cuda()
@@ -109,8 +111,10 @@ def trainData():
             if step % 50 == 0:
                 loss.data = loss.data.cpu()
                 print('Epoch: ', epoch, '| train loss: %.4f' % loss.data.numpy())
+                
     torch.save(cnn, 'cnn.pkl')
 
+    
 predictList = []
 nameList = []
 def testData():
@@ -121,19 +125,14 @@ def testData():
         pred_y = torch.max(test_output, 1).cuda()
         predictList.extend(pred_y[1].data.numpy().tolist())
         nameList.extend(name)
-    #print(predictList)
-    
+ 
+
 if __name__ == '__main__':
     trainData()
-    """ testData()
+    """testData()
     with open(r'D:/user/Desktop/output.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['id', 'label'])
         for label, name in  zip(predictList, nameList):           
-            writer.writerow([name[:-4], classes[label]])  """
-    
-
-
-   
-
+            writer.writerow([name[:-4], classes[label]])"""
   
