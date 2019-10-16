@@ -12,9 +12,11 @@ import matplotlib.pyplot as plt
 import csv
 from PIL import Image
 
-torch.manual_seed(1) 
+torch.manual_seed(1)
+
 TEST_DATA_PATH = "D:/user/Desktop/cs-ioc5008-hw1/dataset/dataset/test/test"
-TRANSFORM_TEST = transforms.Compose([
+
+data_transforms = transforms.Compose([
     transforms.Resize(256),
     transforms.CenterCrop(224),
     transforms.ToTensor(),
@@ -43,7 +45,7 @@ class TestDataset(Dataset):
         return sample
 
 
-test_data = TestDataset(root_dir=TEST_DATA_PATH, transform=TRANSFORM_TEST)
+test_data = TestDataset(root_dir=TEST_DATA_PATH, transform=data_transforms)
 test_data_loader = torch.utils.data.DataLoader(test_data, batch_size=4,shuffle=False,num_workers=4)
 
 classes = ('bedroom', 'coast', 'forest', 'highway','insidecity', 
