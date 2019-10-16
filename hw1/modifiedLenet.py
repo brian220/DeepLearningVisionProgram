@@ -38,7 +38,6 @@ class testDataset(Dataset):
     def __getitem__(self, idx):
         if torch.is_tensor(idx):
            idx = idx.tolist()
-        #print(idx)
         img_name = os.listdir(self.root_dir)[idx]
         img_dir = os.path.join(self.root_dir, img_name)
         image = Image.open(img_dir).convert('RGB')
@@ -46,6 +45,7 @@ class testDataset(Dataset):
         if self.transform:
             image = self.transform(image)
         sample = (image, img_name)
+        
         return sample
 
 
@@ -54,7 +54,6 @@ train_data_loader = data.DataLoader(train_data, batch_size=BATCH_SIZE, shuffle=T
 test_data = testDataset(root_dir=TEST_DATA_PATH, transform=TRANSFORM_IMG)
 #test_data = torchvision.datasets.ImageFolder(root=TEST_DATA_PATH, transform=TRANSFORM_IMG)
 test_data_loader = torch.utils.data.DataLoader(test_data, batch_size = BATCH_SIZE,shuffle = False,num_workers = 4)
-#print(test_data[0])
 
 classes = ('bedroom', 'coast', 'forest', 'highway','insidecity', 
            'kitchen', 'livingroom', 'mountain', 'office','opencountry',
@@ -64,8 +63,8 @@ classes = ('bedroom', 'coast', 'forest', 'highway','insidecity',
 class Net(torch.nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.conv1 = nn.Conv2d(3, 16, kernel_size = 5, padding = 2)
-        self.conv2 = nn.Conv2d(16, 32, kernel_size = 5)
+        self.conv1 = nn.Conv2d(3, 16, kernel_size=5, padding=2)
+        self.conv2 = nn.Conv2d(16, 32, kernel_size=5)
         self.mp = nn.MaxPool2d(2)
         self.relu = nn.ReLU()
         self.fc1 = nn.Linear(32*48*48, 120)
@@ -79,6 +78,7 @@ class Net(torch.nn.Module):
         out = self.relu(self.fc1(out))
         out = self.relu(self.fc2(out))
         out = self.fc3(out)
+        
         return out
 
 net = Net()
@@ -101,6 +101,7 @@ def trainData():
             if step % 50 == 0:
                 loss.data = loss.data.cpu()
                 print('Epoch: ', epoch, '| train loss: %.4f' % loss.data.numpy())
+                
     torch.save(net, 'lenet.pkl')
 
 predictList = []
