@@ -22,7 +22,6 @@ TRANSFORM_TEST = transforms.Compose([
     ])
 
 class TestDataset(Dataset):
-
     def __init__(self, root_dir, transform=None):
         self.root_dir = root_dir
         self.transform = transform
