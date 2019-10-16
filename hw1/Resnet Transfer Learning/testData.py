@@ -21,6 +21,7 @@ TRANSFORM_TEST = transforms.Compose([
     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ])
 
+
 class TestDataset(Dataset):
     def __init__(self, root_dir, transform=None):
         self.root_dir = root_dir
@@ -41,6 +42,7 @@ class TestDataset(Dataset):
         sample = (image, img_name)
         return sample
 
+
 test_data = TestDataset(root_dir=TEST_DATA_PATH, transform=TRANSFORM_TEST)
 test_data_loader = torch.utils.data.DataLoader(test_data, batch_size=4,shuffle=False,num_workers=4)
 
@@ -59,13 +61,16 @@ def testData():
         predictList.extend(pred_y[1].data.cpu().numpy().tolist())
         nameList.extend(name)
 
+
 def writeCsv():
     with open(r'D:/user/Desktop/output.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['id', 'label'])
         for label, name in  zip(predictList, nameList):           
             writer.writerow([name[:-4], classes[label]]) 
+
             
 if __name__ == '__main__':
     testData()
     writeCsv()
+    
